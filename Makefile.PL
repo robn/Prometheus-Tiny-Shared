@@ -23,6 +23,7 @@ my %WriteMakefileArgs = (
     "warnings" => 0
   },
   "TEST_REQUIRES" => {
+    "File::Temp" => 0,
     "Test::More" => 0
   },
   "VERSION" => "0.001",
@@ -34,6 +35,7 @@ my %WriteMakefileArgs = (
 
 my %FallbackPrereqs = (
   "Cache::FastMmap" => 0,
+  "File::Temp" => 0,
   "Prometheus::Tiny" => 0,
   "Test::More" => 0,
   "parent" => 0,
