@@ -42,6 +42,15 @@ sub declare {
   return;
 }
 
+sub histogram_observe {
+  my $self = shift;
+  my ($name) = @_;
+
+  $self->{meta}{$name} = $self->{cache}->get(join('-', 'm', $name));
+
+  return $self->SUPER::histogram_observe(@_);
+}
+
 sub format {
   my $self = shift;
 
