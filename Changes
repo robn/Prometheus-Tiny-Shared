@@ -1,5 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+- Update for Prometheus::Tiny 0.004 internals changes, including timestamp and
+  histogram support
 
 0.001     2018-07-27 23:25:50+10:00 Australia/Melbourne

@@ -12,7 +12,7 @@ Prometheus::Tiny - A tiny Prometheus client backed by a shared memory region
 
 # DESCRIPTION
 
-`Prometheus::Tiny::Shared` is a wrapper around [Prometheus::Tiny](https://metacpan.org/pod/Prometheus::Tiny) that instead of storing metrics data in a hashtable, stores them in a shared memory region (provided by [Cache::FastMmap](https://metacpan.org/pod/Cache::FastMmap)). This lets you keep a single set of metrics in a multithreaded app.
+`Prometheus::Tiny::Shared` is a wrapper around [Prometheus::Tiny](https://metacpan.org/pod/Prometheus%3A%3ATiny) that instead of storing metrics data in a hashtable, stores them in a shared memory region (provided by [Cache::FastMmap](https://metacpan.org/pod/Cache%3A%3AFastMmap)). This lets you keep a single set of metrics in a multithreaded app.
 
 `Prometheus::Tiny::Shared` should be a drop-in replacement for `Prometheus::Tiny`. Any differences in behaviour is a bug, and should be reported.
 
@@ -22,7 +22,7 @@ Prometheus::Tiny - A tiny Prometheus client backed by a shared memory region
 
     my $prom = Prometheus::Tiny::Shared->new(cache_args => { ... })
 
-`cache_args` will be passed on to the `Cache::FastMmap` constructor. If not provided, `Cache::FastMmap`'s defaults will be used, but that's probably not what you want. At the very least you should read the discussion of `share_file` and `init_file` in [Cache::FastMmap](https://metacpan.org/pod/Cache::FastMmap).
+`cache_args` will be passed on to the `Cache::FastMmap` constructor. If not provided, `Cache::FastMmap`'s defaults will be used, but that's probably not what you want. At the very least you should read the discussion of `share_file` and `init_file` in [Cache::FastMmap](https://metacpan.org/pod/Cache%3A%3AFastMmap).
 
 # SUPPORT
 
