@@ -23,9 +23,11 @@ my %WriteMakefileArgs = (
     "warnings" => 0
   },
   "TEST_REQUIRES" => {
+    "Data::Random" => 0,
     "File::Temp" => 0,
     "HTTP::Request::Common" => 0,
     "Plack::Test" => 0,
+    "Test::Differences" => 0,
     "Test::More" => 0
   },
   "VERSION" => "0.002",
@@ -37,10 +39,12 @@ my %WriteMakefileArgs = (
 
 my %FallbackPrereqs = (
   "Cache::FastMmap" => 0,
+  "Data::Random" => 0,
   "File::Temp" => 0,
   "HTTP::Request::Common" => 0,
   "Plack::Test" => 0,
   "Prometheus::Tiny" => "0.004",
+  "Test::Differences" => 0,
   "Test::More" => 0,
   "parent" => 0,
   "strict" => 0,
