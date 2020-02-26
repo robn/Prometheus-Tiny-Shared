@@ -12,7 +12,7 @@ Prometheus::Tiny - A tiny Prometheus client backed by a shared memory region
 
 # DESCRIPTION
 
-`Prometheus::Tiny::Shared` is a wrapper around [Prometheus::Tiny](https://metacpan.org/pod/Prometheus%3A%3ATiny) that instead of storing metrics data in a hashtable, stores them in a shared memory region (provided by [Cache::FastMmap](https://metacpan.org/pod/Cache%3A%3AFastMmap)). This lets you keep a single set of metrics in a multithreaded app.
+`Prometheus::Tiny::Shared` is a wrapper around [Prometheus::Tiny](https://metacpan.org/pod/Prometheus%3A%3ATiny) that instead of storing metrics data in a hashtable, stores them in a shared database (provided by SQLite, though this may change in the future). This lets you keep a single set of metrics in a multithreaded app.
 
 `Prometheus::Tiny::Shared` should be a drop-in replacement for `Prometheus::Tiny`. Any differences in behaviour is a bug, and should be reported.
 
@@ -20,9 +20,11 @@ Prometheus::Tiny - A tiny Prometheus client backed by a shared memory region
 
 ## new
 
-    my $prom = Prometheus::Tiny::Shared->new(cache_args => { ... })
+    my $prom = Prometheus::Tiny::Shared->new(filename => ...);
 
-`cache_args` will be passed on to the `Cache::FastMmap` constructor. If not provided, `Cache::FastMmap`'s defaults will be used, but that's probably not what you want. At the very least you should read the discussion of `share_file` and `init_file` in [Cache::FastMmap](https://metacpan.org/pod/Cache%3A%3AFastMmap).
+`filename`, if provided, will name an on-disk file to use as the backing store. If not supplied, an in-memory store will be used, which is suitable for testing purposes.
+
+The in-memory store (and indeed, the entire Prometheus::Tiny::Shared object) is NOT safe across forks; if you fork you need to create a new object with the filename for the backing store supplied.
 
 # SUPPORT
 
