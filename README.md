@@ -26,6 +26,8 @@ Prometheus::Tiny - A tiny Prometheus client backed by a shared memory region
 
 The in-memory store (and indeed, the entire Prometheus::Tiny::Shared object) is NOT safe across forks; if you fork you need to create a new object with the filename for the backing store supplied.
 
+The `cache_args` argument will cause the constructor to croak. Code using this arg in previous versions of Prometheus::Tiny::Shared no longer work, and needs to be updated to use the `filename` argument instead.
+
 # SUPPORT
 
 ## Bugs / Feature Requests

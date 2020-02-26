@@ -16,6 +16,7 @@ my %WriteMakefileArgs = (
   "LICENSE" => "perl",
   "NAME" => "Prometheus::Tiny::Shared",
   "PREREQ_PM" => {
+    "Carp" => 0,
     "DBD::SQLite" => 0,
     "DBI" => 0,
     "Prometheus::Tiny" => "0.004",
@@ -30,6 +31,7 @@ my %WriteMakefileArgs = (
     "HTTP::Request::Common" => 0,
     "Plack::Test" => 0,
     "Test::Differences" => 0,
+    "Test::Exception" => 0,
     "Test::More" => 0
   },
   "VERSION" => "0.002",
@@ -40,6 +42,7 @@ my %WriteMakefileArgs = (
 
 
 my %FallbackPrereqs = (
+  "Carp" => 0,
   "DBD::SQLite" => 0,
   "DBI" => 0,
   "Data::Random" => 0,
@@ -49,6 +52,7 @@ my %FallbackPrereqs = (
   "Prometheus::Tiny" => "0.004",
   "Sereal" => 0,
   "Test::Differences" => 0,
+  "Test::Exception" => 0,
   "Test::More" => 0,
   "parent" => 0,
   "strict" => 0,

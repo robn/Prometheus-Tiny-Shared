@@ -11,9 +11,17 @@ use parent 'Prometheus::Tiny';
 use DBI;
 use DBD::SQLite;
 use Sereal qw(encode_sereal decode_sereal);
+use Carp qw(croak);
 
 sub new {
   my ($class, %args) = @_;
+
+  if (exists $args{cache_args}) {
+    croak <<EOF;
+The 'cache_args' argument to Prometheus::Tiny::Shared::new has been removed. 
+Read the docs for more info, and switch to the 'filename' argument.
+EOF
+  }
 
   my $filename = delete $args{filename} // ':memory:';
 
@@ -192,6 +200,8 @@ C<Prometheus::Tiny::Shared> should be a drop-in replacement for C<Prometheus::Ti
 C<filename>, if provided, will name an on-disk file to use as the backing store. If not supplied, an in-memory store will be used, which is suitable for testing purposes.
 
 The in-memory store (and indeed, the entire Prometheus::Tiny::Shared object) is NOT safe across forks; if you fork you need to create a new object with the filename for the backing store supplied.
+
+The C<cache_args> argument will cause the constructor to croak. Code using this arg in previous versions of Prometheus::Tiny::Shared no longer work, and needs to be updated to use the C<filename> argument instead.
 
 =head1 SUPPORT
 
