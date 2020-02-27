@@ -2,7 +2,7 @@
 
 # NAME
 
-Prometheus::Tiny - A tiny Prometheus client backed by a shared memory region
+Prometheus::Tiny::Shared - A tiny Prometheus client with a shared database behind it
 
 # SYNOPSIS
 
