@@ -142,7 +142,7 @@ sub format {
 SQL
 
   $metrics_sth->execute;
-  for my $row ($metrics_sth->fetchall_arrayref->@*) {
+  for my $row (@{$metrics_sth->fetchall_arrayref}) {
     my ($name, $labels, $value, $timestamp) = @$row;
     $metrics{$name}{$labels} = [ $value, $timestamp ];
   }
@@ -153,7 +153,7 @@ SQL
 SQL
 
   $meta_sth->execute;
-  for my $row ($meta_sth->fetchall_arrayref->@*) {
+  for my $row (@{$meta_sth->fetchall_arrayref}) {
     my ($name, $meta) = @$row;
     $meta{$name} = decode_sereal($meta);
   }

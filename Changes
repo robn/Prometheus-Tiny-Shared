@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+- Make it work under Perl < 5.24 again (no postderef)
 
 0.010     2020-02-26 21:45:37+11:00 Australia/Melbourne
 - Change to using SQLite for the backing store, fixing the situation where
