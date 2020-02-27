@@ -24,11 +24,31 @@ EOF
   }
 
   my $filename = delete $args{filename} // ':memory:';
+  my $init_file = delete $args{init_file} // 0;
 
   my $self = $class->SUPER::new(%args);
 
+  $self->{filename} = $filename;
+  $self->_connect($init_file);
+
+  return $self;
+}
+
+sub _connect {
+  my ($self, $init_file) = @_;
+
+  if ($self->{dbh}) {
+    $self->{dbh}->disconnect;
+    delete $self->{dbh};
+  }
+
+  if ($init_file && -e $self->{filename}) {
+    unlink $self->{filename}
+      or die "couldn't delete data file '$self->{filename}': $!";
+  }
+
   $self->{dbh} = DBI->connect(
-                    "dbi:SQLite:dbname=$filename", "", "",
+                    "dbi:SQLite:dbname=$self->{filename}", "", "",
                     { RaiseError => 1, AutoCommit => 1 },
   );
 
@@ -48,8 +68,6 @@ SQL
       meta BLOB NOT NULL
     );
 SQL
-
-  return $self;
 }
 
 sub DESTROY {
@@ -198,6 +216,8 @@ C<Prometheus::Tiny::Shared> should be a drop-in replacement for C<Prometheus::Ti
     my $prom = Prometheus::Tiny::Shared->new(filename => ...);
 
 C<filename>, if provided, will name an on-disk file to use as the backing store. If not supplied, an in-memory store will be used, which is suitable for testing purposes.
+
+C<init_file>, if set to true, will overwrite any existing data file with the given name. If you do this while you already have existing C<Prometheus::Tiny::Shared> objects using the old file, strange things will probably happen. Don't do that.
 
 The in-memory store (and indeed, the entire Prometheus::Tiny::Shared object) is NOT safe across forks; if you fork you need to create a new object with the filename for the backing store supplied.
 

@@ -24,6 +24,8 @@ Prometheus::Tiny - A tiny Prometheus client backed by a shared memory region
 
 `filename`, if provided, will name an on-disk file to use as the backing store. If not supplied, an in-memory store will be used, which is suitable for testing purposes.
 
+`init_file`, if set to true, will overwrite any existing data file with the given name. If you do this while you already have existing `Prometheus::Tiny::Shared` objects using the old file, strange things will probably happen. Don't do that.
+
 The in-memory store (and indeed, the entire Prometheus::Tiny::Shared object) is NOT safe across forks; if you fork you need to create a new object with the filename for the backing store supplied.
 
 The `cache_args` argument will cause the constructor to croak. Code using this arg in previous versions of Prometheus::Tiny::Shared no longer work, and needs to be updated to use the `filename` argument instead.
