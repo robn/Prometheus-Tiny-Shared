@@ -34,6 +34,17 @@ EOF
   return $self;
 }
 
+sub _dbh {
+  my ($self) = @_;
+
+  if ($self->{pid} != $$) {
+    delete $self->{dbh};
+    $self->_connect;
+  }
+
+  return $self->{dbh};
+}
+
 sub _connect {
   my ($self, $init_file) = @_;
 
@@ -41,6 +52,7 @@ sub _connect {
     $self->{dbh}->disconnect;
     delete $self->{dbh};
   }
+  $self->{pid} = $$;
 
   if ($init_file && -e $self->{filename}) {
     unlink $self->{filename}
@@ -49,7 +61,11 @@ sub _connect {
 
   $self->{dbh} = DBI->connect(
                     "dbi:SQLite:dbname=$self->{filename}", "", "",
-                    { RaiseError => 1, AutoCommit => 1 },
+                    {
+                      RaiseError => 1,
+                      AutoCommit => 1,
+                      AutoInactiveDestroy => 1,
+                    }
   );
 
   $self->{dbh}->do(<<SQL);
@@ -72,13 +88,16 @@ SQL
 
 sub DESTROY {
   my ($self) = @_;
-  $self->{dbh}->disconnect;
+
+  if ($self->{dbh}) {
+    $self->{dbh}->disconnect;
+  }
 }
 
 sub set {
   my ($self, $name, $value, $labels, $timestamp) = @_;
 
-  my $sth = $self->{dbh}->prepare_cached(<<SQL);
+  my $sth = $self->_dbh->prepare_cached(<<SQL);
     REPLACE INTO pts_store
       (name, labels, value, timestamp)
     VALUES
@@ -95,13 +114,13 @@ sub add {
 
   # UPSERT would be better here, but not available in older SQLites
 
-  my $insert_sth = $self->{dbh}->prepare_cached(<<SQL);
+  my $insert_sth = $self->_dbh->prepare_cached(<<SQL);
     INSERT OR IGNORE INTO pts_store
       (name, labels, value)
     VALUES
       (?, ?, 0);
 SQL
-  my $update_sth = $self->{dbh}->prepare_cached(<<SQL);
+  my $update_sth = $self->_dbh->prepare_cached(<<SQL);
     UPDATE pts_store
     SET value = value + ?
     WHERE name = ? AND labels = ?;
@@ -109,10 +128,10 @@ SQL
 
   my $fmt = $self->_format_labels($labels);
 
-  $self->{dbh}->begin_work;
+  $self->_dbh->begin_work;
   $insert_sth->execute($name, $fmt);
   $update_sth->execute($value, $name, $fmt);
-  $self->{dbh}->commit;
+  $self->_dbh->commit;
 
   return;
 }
@@ -120,7 +139,7 @@ SQL
 sub declare {
   my ($self, $name, %meta) = @_;
 
-  my $sth = $self->{dbh}->prepare_cached(<<SQL);
+  my $sth = $self->_dbh->prepare_cached(<<SQL);
     REPLACE INTO pts_meta
       (name, meta)
     VALUES
@@ -136,7 +155,7 @@ sub histogram_observe {
   my $self = shift;
   my ($name) = @_;
 
-  my $sth = $self->{dbh}->prepare_cached(<<SQL);
+  my $sth = $self->_dbh->prepare_cached(<<SQL);
     SELECT meta FROM pts_meta
     WHERE name = ?;
 SQL
@@ -155,7 +174,7 @@ sub format {
 
   my (%metrics, %meta);
 
-  my $metrics_sth = $self->{dbh}->prepare_cached(<<SQL);
+  my $metrics_sth = $self->_dbh->prepare_cached(<<SQL);
     SELECT name, labels, value, timestamp FROM pts_store;
 SQL
 
@@ -166,7 +185,7 @@ SQL
   }
   $metrics_sth->finish;
 
-  my $meta_sth = $self->{dbh}->prepare_cached(<<SQL);
+  my $meta_sth = $self->_dbh->prepare_cached(<<SQL);
     SELECT name, meta FROM pts_meta;
 SQL
 
@@ -218,8 +237,6 @@ C<Prometheus::Tiny::Shared> should be a drop-in replacement for C<Prometheus::Ti
 C<filename>, if provided, will name an on-disk file to use as the backing store. If not supplied, an in-memory store will be used, which is suitable for testing purposes.
 
 C<init_file>, if set to true, will overwrite any existing data file with the given name. If you do this while you already have existing C<Prometheus::Tiny::Shared> objects using the old file, strange things will probably happen. Don't do that.
-
-The in-memory store (and indeed, the entire Prometheus::Tiny::Shared object) is NOT safe across forks; if you fork you need to create a new object with the filename for the backing store supplied.
 
 The C<cache_args> argument will cause the constructor to croak. Code using this arg in previous versions of Prometheus::Tiny::Shared no longer work, and needs to be updated to use the C<filename> argument instead.
 
