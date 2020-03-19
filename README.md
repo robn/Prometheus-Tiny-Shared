@@ -28,6 +28,10 @@ Prometheus::Tiny::Shared - A tiny Prometheus client with a shared database behin
 
 The `cache_args` argument will cause the constructor to croak. Code using this arg in previous versions of Prometheus::Tiny::Shared no longer work, and needs to be updated to use the `filename` argument instead.
 
+# NOTES
+
+The on-disk backing store file is not intended to be a persistent, durable store (Prometheus will handle metrics resetting to zero correctly). For best performance, store it on some kind of memory-backed filesystem (eg Linux `tmpfs`).
+
 # SUPPORT
 
 ## Bugs / Feature Requests
