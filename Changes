@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.022     2021-06-04 10:48:12+10:00 Australia/Melbourne
 - Ensure that a metric is not redeclared with different metadata
 - Bump Prometheus::Tiny to 0.005 to ensure label values are escaped correctly
   (thanks Slaven Rezić!)
