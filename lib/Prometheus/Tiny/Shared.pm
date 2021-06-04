@@ -86,7 +86,26 @@ sub declare {
   my ($self, $name, %meta) = @_;
 
   my $key = join('-', 'm', $name);
-  shash_set($self->{_shash}, $key, encode_json(\%meta));
+  my $value = encode_json(\%meta);
+
+  return if shash_cset($self->{_shash}, $key, undef, $value);
+
+  my $old = decode_json(shash_get($self->{_shash}, $key));
+
+  if (
+    ((exists $old->{type} ^ exists $meta{type}) ||
+      (exists $old->{type} && $old->{type} ne $meta{type})) ||
+    ((exists $old->{help} ^ exists $meta{help}) ||
+      (exists $old->{help} && $old->{help} ne $meta{help})) ||
+    ((exists $old->{buckets} ^ exists $meta{buckets}) ||
+      (exists $old->{buckets} && (
+      @{$old->{buckets}} ne @{$meta{buckets}} ||
+      grep { $old->{buckets}[$_] != $meta{buckets}[$_] } (0 .. $#{$meta{buckets}})
+      ))
+    )
+  ) {
+    croak "redeclaration of '$name' with mismatched meta";
+  }
 
   return;
 }
