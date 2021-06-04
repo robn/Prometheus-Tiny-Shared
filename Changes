@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+- Bump Prometheus::Tiny to 0.005 to ensure label values are escaped correctly
+  (thanks Slaven Rezić!)
 
 0.021     2021-04-14 16:33:51+10:00 Australia/Melbourne
 - Add clear method, to remove metric values
@@ -9,7 +11,8 @@ Revision history for {{$dist->name}}
 - Rewrite to use Hash::SharedMem for the backend
 
 0.012     2020-03-19 14:35:01+11:00 Australia/Melbourne
-- Disable SQLite synchronous writes, and note that the backing store is not intended to be persistent or durable.
+- Disable SQLite synchronous writes, and note that the backing store is not
+  intended to be persistent or durable.
 
 0.011     2020-02-27 16:17:58+11:00 Australia/Melbourne
 - Make it work under Perl < 5.24 again (no postderef)
