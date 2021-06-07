@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+- Get compiling under 5.8 again
 
 0.022     2021-06-04 10:48:12+10:00 Australia/Melbourne
 - Ensure that a metric is not redeclared with different metadata

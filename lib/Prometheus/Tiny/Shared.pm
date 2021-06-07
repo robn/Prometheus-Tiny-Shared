@@ -25,7 +25,7 @@ EOF
   }
 
   my $filename = delete $args{filename};
-  my $init_file = delete $args{init_file} // 0;
+  my $init_file = delete $args{init_file} || 0;
 
   my $self = $class->SUPER::new(%args);
 
