@@ -5,7 +5,7 @@ package Prometheus::Tiny::Shared;
 use warnings;
 use strict;
 
-use Prometheus::Tiny 0.009;
+use Prometheus::Tiny 0.010;
 use parent 'Prometheus::Tiny';
 
 use Hash::SharedMem qw(shash_open shash_get shash_set shash_cset shash_keys_array shash_group_get_hash);
