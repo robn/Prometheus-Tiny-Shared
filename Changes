@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+- Update for Prometheus::Tiny 0.010 undef value protection (properly this time!)
 - Update for Prometheus::Tiny 0.011 undef label value protection
 
 0.026     2022-02-01 08:31:26+11:00 Australia/Melbourne
